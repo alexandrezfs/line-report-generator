@@ -1,2 +1,3 @@
 requests
-pytest
+line-bot-sdk
+flask
