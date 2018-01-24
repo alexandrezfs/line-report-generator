@@ -1,3 +1,5 @@
 requests
 line-bot-sdk
 flask
+alembic
+psycopg2

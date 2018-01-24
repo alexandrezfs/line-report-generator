@@ -3,3 +3,4 @@ coverage
 alembic
 pylint
 pytest
+psycopg2

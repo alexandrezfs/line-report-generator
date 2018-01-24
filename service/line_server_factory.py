@@ -1,3 +1,8 @@
+'''
+Factory in charge of delivering a server instance on demand
+Define handlers to interact with the Line Bot
+'''
+
 from flask import Flask, request, abort
 from linebot import (
     LineBotApi, WebhookHandler
@@ -42,7 +47,11 @@ class LineServerFactory:
             except InvalidSignatureError:
                 abort(400)
 
-            return 'OK'
+            response = {
+                "message": "OK"
+            }
+
+            return response
 
         @handler.add(MessageEvent, message=TextMessage)
         def handle_message(event):

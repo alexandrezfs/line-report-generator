@@ -1,0 +1,29 @@
+---
+- hosts: localhost
+  become: yes
+
+  vars:
+    app_name: "line_report_generator"
+    app_virtualenv_path: "/opt/line/line_report_generator_venv"
+    app_path: "/opt/line/line_report_generator"
+    number_of_process: "{{ lookup('env','PROCESS_NUMBER') | default(4, true) }}"
+
+  pre_tasks:
+
+    - name: check config_dir is supplied
+      fail: msg="missing required variable 'config_dir'"
+      when: config_dir is not defined
+
+  tasks:
+
+    - name: restart nginx
+      systemd:
+        name: nginx
+        daemon_reload: yes
+        state: restarted
+        enabled: yes
+
+    - name: migrate database
+      shell: "{{ app_virtualenv_path }}/bin/alembic upgrade head"
+      args:
+        chdir: "{{ app_path }}"

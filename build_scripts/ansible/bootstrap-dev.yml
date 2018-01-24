@@ -1,0 +1,77 @@
+---
+- hosts: localhost
+  become: yes
+
+  vars:
+    app_name: "line_report_generator"
+
+  tasks:
+
+    - name: installations from apt-get
+      apt:
+        name="{{ item }}"
+        state=latest
+        update_cache=yes
+      with_items:
+        - build-essential
+        - python3-dev
+        - libpq-dev
+
+    - name: install virtualenv
+      pip:
+        name: virtualenv
+        state: present
+
+    - name: ensure that destinations exist
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: 0755
+        owner: root
+        group: root
+      with_items:
+        - "{{ ansible_env.APP_PATH }}"
+        - "{{ ansible_env.VIRTUAL_ENV_PATH }}"
+
+    - name: create app group
+      group:
+        name: "{{ app_name }}"
+        state: present
+
+    - name: create app user
+      user:
+        name: "{{ app_name }}"
+        group: "{{ app_name }}"
+        state: present
+
+    - name: change file ownership
+      file:
+        path: "{{ ansible_env.APP_PATH }}"
+        owner: "{{ app_name }}"
+        group: "{{ app_name }}"
+        recurse: yes
+
+    - name: build virtualenv
+      pip:
+        requirements: "{{ ansible_env.APP_PATH }}/requirements_test.txt"
+        virtualenv: "{{ ansible_env.VIRTUAL_ENV_PATH }}"
+        virtualenv_python: "python3"
+
+    - name: install tox
+      pip:
+        name="tox"
+        state=latest
+
+    - name: creating tox environment
+      shell: >
+        tox -r -e {{ ansible_env.ENV_NAME }}
+      args:
+        chdir: "{{ ansible_env.APP_PATH }}"
+        creates: "{{ ansible_env.VIRTUAL_ENV_PATH }}"
+
+    - name: migrate database
+      shell: "{{ ansible_env.VIRTUAL_ENV_PATH }}/bin/alembic upgrade head"
+      args:
+        chdir: "{{ ansible_env.APP_PATH }}"
+      environment:
+        PYTHONPATH: /{{ ansible_env.APP_PATH }}/bin
