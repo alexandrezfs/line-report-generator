@@ -14,13 +14,22 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
 
-from service.config import LINE_BOT_CHANNEL_ACCESS_TOKEN, LINE_BOT_CHANNEL_SECRET
+from service.config import LINE_BOT_CHANNEL_ACCESS_TOKEN, LINE_BOT_CHANNEL_SECRET, DB_NAME, DB_USER, DB_PASSWORD, \
+    DB_HOST
+from service.helpers.psycopg2_wrapper import ResilientConnection
 
 MAIN_CALLBACK_RESOURCE = "/report_callback"
 
 
 class LineServerFactory:
     def get_instance(self):
+
+        database = ResilientConnection(
+            db_name=DB_NAME,
+            db_user=DB_USER,
+            db_password=DB_PASSWORD,
+            db_host=DB_HOST,
+        )
 
         line_server_instance = Flask(__name__)
         self.define_line_server_handlers(line_server_instance)

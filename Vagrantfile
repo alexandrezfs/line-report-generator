@@ -8,6 +8,9 @@ DB_PASSWORD = "vagrant"
 DB_HOST = "db"
 DB_NAME = "vagrant"
 
+LINE_BOT_CHANNEL_ACCESS_TOKEN = "xxxx"
+LINE_BOT_CHANNEL_SECRET = "xxxx"
+
 # to avoid typing --provider docker --no-parallel
 # at every vagrant up
 ENV['VAGRANT_NO_PARALLEL'] = 'yes'
