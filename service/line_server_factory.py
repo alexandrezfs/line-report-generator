@@ -32,11 +32,11 @@ class LineServerFactory:
         )
 
         line_server_instance = Flask(__name__)
-        self.define_line_server_handlers(line_server_instance)
+        self.define_line_server_handlers(line_server_instance, database)
         return line_server_instance
 
     @staticmethod
-    def define_line_server_handlers(line_server_instance):
+    def define_line_server_handlers(line_server_instance, database):
 
         line_bot_api = LineBotApi(LINE_BOT_CHANNEL_ACCESS_TOKEN)
         handler = WebhookHandler(LINE_BOT_CHANNEL_SECRET)
