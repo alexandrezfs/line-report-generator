@@ -2,4 +2,4 @@ requests
 line-bot-sdk
 flask
 alembic
-psycopg2
+psycopg2-binary

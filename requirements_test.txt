@@ -3,4 +3,7 @@ coverage
 alembic
 pylint
 pytest
-psycopg2
+psycopg2-binary
+line-bot-sdk
+flask
+

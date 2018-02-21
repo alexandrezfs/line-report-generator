@@ -48,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_VERSION) do |config|
   config.ssh.insert_key = true
   config.vm.define "dev", primary: true do |app|
     app.vm.provider "docker" do |d|
-      d.image = "allansimon/allan-docker-dev-python"
+      d.image = "alexzhxin/python-dev"
       d.name = "#{PROJECT}_dev"
       d.link "#{PROJECT}_db:#{DB_HOST}"
       d.has_ssh = true
